@@ -59,18 +59,18 @@ async function detectText(text) {
     .map(s => s[2])
     .slice(0, 3)
 
-  // Guess model family from score patterns
-  let modelGuess = 'Unknown LLM'
-  if (prob >= 85) modelGuess = 'GPT-4o / ChatGPT'
-  else if (prob >= 70) modelGuess = 'Claude / Gemini'
-  else if (prob >= 50) modelGuess = 'AI Language Model'
+  // Determine label based on confidence since Sapling doesn't provide specific model names
+  let modelLabel = 'AI Generated'
+  if (prob >= 85) modelLabel = 'High-Confidence AI'
+  else if (prob >= 65) modelLabel = 'AI Generated'
+  else if (prob >= 50) modelLabel = 'Likely AI'
 
   return {
     isAiGenerated: isAi,
     confidence: prob,
     verdict: prob >= 60 ? 'ai' : prob >= 30 ? 'mixed' : 'human',
     detectedModel: isAi ? {
-      name: modelGuess,
+      name: modelLabel,
       provider: 'Detected via Sapling AI',
       description: 'Text analyzed for AI generation patterns including perplexity and burstiness.',
       confidence: prob,
