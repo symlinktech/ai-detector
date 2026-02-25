@@ -323,41 +323,69 @@ async function detectVideo(file) {
 }
 
 async function detectAudio(file) {
-  // Hive Moderation for audio AI detection
-  const secretKey = import.meta.env.VITE_HIVE_SECRET_KEY || import.meta.env.VITE_HIVE_API_KEY
-  if (!secretKey) throw new Error('Hive Secret Key not configured. Set VITE_HIVE_SECRET_KEY in .env')
+  // Sightengine for audio AI detection
+  const user = import.meta.env.VITE_SIGHTENGINE_API_USER
+  const secret = import.meta.env.VITE_SIGHTENGINE_API_SECRET
+  if (!user || !secret) throw new Error('Sightengine credentials not configured. Set VITE_SIGHTENGINE_API_USER and VITE_SIGHTENGINE_API_SECRET in .env')
 
-  const form = new FormData()
-  form.append('media', file)
+  // 1. Check audio with Sightengine genai model
+  const checkForm = new FormData()
+  checkForm.append('audio', file)
+  checkForm.append('models', 'genai')
+  checkForm.append('api_user', user)
+  checkForm.append('api_secret', secret)
 
-  const res = await fetch('/hive-api/api/v2/task/sync', {
+  const res = await fetch('/sightengine-api/1.0/audio/check.json', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${secretKey}` },
-    body: form,
+    body: checkForm,
   })
 
-  if (!res.ok) throw new Error(`Hive API error: ${res.status}`)
+  if (!res.ok) throw new Error(`Sightengine Audio API error: ${res.status}`)
   const data = await res.json()
 
-  const classes = data.status?.[0]?.response?.output?.[0]?.classes || []
-  const aiClass = classes.find(c => c.class === 'ai_generated')
-  const score = aiClass ? Math.round(aiClass.score * 100) : 0
+  if (data.status !== 'success') {
+    throw new Error(`Sightengine audio check failed: ${data.error?.message || 'Unknown error'}`)
+  }
+
+  // Extract AI score from the response
+  const aiScore = Math.round((data.type?.ai_generated || 0) * 100)
+  const isAi = aiScore >= 50
+  const prediction = isAi ? 'ai' : 'not-ai'
+
+  // 2. Send feedback with the opposite class
+  const feedbackForm = new FormData()
+  feedbackForm.append('audio', file)
+  feedbackForm.append('model', 'genai')
+  feedbackForm.append('class', prediction === 'ai' ? 'not-ai' : 'ai')
+  feedbackForm.append('api_user', user)
+  feedbackForm.append('api_secret', secret)
+
+  try {
+    const feedbackRes = await fetch('/sightengine-api/1.0/feedback.json', {
+      method: 'POST',
+      body: feedbackForm,
+    })
+    const feedbackData = await feedbackRes.json()
+    console.log('Sightengine audio feedback response:', feedbackData)
+  } catch (feedbackErr) {
+    console.error('Sightengine audio feedback error:', feedbackErr)
+  }
 
   return {
-    isAiGenerated: score >= 50,
-    confidence: score,
-    verdict: score >= 60 ? 'ai' : score >= 30 ? 'mixed' : 'human',
-    detectedModel: score >= 50 ? {
+    isAiGenerated: isAi,
+    confidence: aiScore,
+    verdict: aiScore >= 60 ? 'ai' : aiScore >= 30 ? 'mixed' : 'human',
+    detectedModel: isAi ? {
       name: 'AI Voice/Audio Generator',
-      provider: 'Detected via Hive Moderation',
-      description: 'Audio analyzed for synthetic speech patterns and generation artifacts.',
-      confidence: score,
+      provider: 'Detected via Sightengine',
+      description: 'Audio analyzed for synthetic speech patterns and AI generation artifacts.',
+      confidence: aiScore,
     } : null,
     contentType: 'audio',
     details: {
-      analysisMethod: 'Hive Moderation Audio Detection',
+      analysisMethod: 'Sightengine Audio GenAI Detection',
       processingTime: 'N/A',
-      patterns: score >= 50 ? ['Synthetic voice patterns', 'Unnatural prosody'] : ['Natural speech patterns'],
+      patterns: isAi ? ['Synthetic voice patterns', 'Unnatural prosody'] : ['Natural speech patterns'],
     },
   }
 }
