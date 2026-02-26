@@ -437,3 +437,59 @@ input::placeholder {
     flex: 0 0 calc(33.333% - 3px);
   }
 }
+
+/* Artifacts Detail Section */
+.artifacts-section {
+  margin-top: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+.artifacts-title {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.artifacts-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.artifact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--surface-hover);
+  border-left: 2px solid transparent;
+}
+
+.artifact-item.artifact-ai {
+  border-left-color: var(--red);
+}
+
+.artifact-item.artifact-human {
+  border-left-color: var(--green);
+}
+
+.artifact-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.artifact-text {
+  color: var(--text);
+}

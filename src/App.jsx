@@ -204,7 +204,6 @@ export default function App() {
                 <h3>Detected AI Model</h3>
                 <div className="model-card">
                   <div className="model-name">{result.detectedModel.name}</div>
-                  <div className="model-provider">by {result.detectedModel.provider}</div>
                   <div className="model-desc">{result.detectedModel.description}</div>
                   <div className="model-confidence">
                     Model match confidence: <strong>{result.detectedModel.confidence}%</strong>
@@ -230,11 +229,14 @@ export default function App() {
                   <span className="value">{result.details.processingTime}</span>
                 </div>
                 {result.details.patterns && result.details.patterns.length > 0 && (
-                  <div style={{ marginTop: '8px' }}>
-                    <span className="label" style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Patterns Found:</span>
-                    <ul style={{ marginTop: '4px', paddingLeft: '16px' }}>
+                  <div className="artifacts-section">
+                    <span className="label artifacts-title">Detection Evidence</span>
+                    <ul className="artifacts-list">
                       {result.details.patterns.map((p, i) => (
-                        <li key={i} style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '2px' }}>{p}</li>
+                        <li key={i} className={`artifact-item ${result.verdict === 'human' ? 'artifact-human' : 'artifact-ai'}`}>
+                          <span className="artifact-icon">{result.verdict === 'human' ? '✅' : '🚩'}</span>
+                          <span className="artifact-text">{p}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>

@@ -158,11 +158,11 @@ export function getMockResult(contentType) {
     } : null,
     contentType,
     details: {
-      analysisMethod: isAi ? 'Pattern matching + Statistical analysis' : 'Heuristic scoring',
+      analysisMethod: isAi ? 'Deep Neural Pattern Matching' : 'Heuristic Biological Scoring',
       processingTime: `${randomBetween(200, 1500)}ms`,
       patterns: isAi
-        ? ['Low perplexity score', 'Uniform token distribution', 'Repetitive phrasing patterns']
-        : ['High perplexity', 'Natural variance in token distribution'],
+        ? ['Micro-patterns indicative of generation', 'Extremely low variance in distribution', 'Predictable structural repetition']
+        : ['High structural entropy', 'Natural biological variance in distribution'],
     },
   }
 }

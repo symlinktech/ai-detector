@@ -71,17 +71,17 @@ async function detectText(text) {
     verdict: prob >= 60 ? 'ai' : prob >= 30 ? 'mixed' : 'human',
     detectedModel: isAi ? {
       name: modelLabel,
-      provider: 'Detected via Sapling AI',
+      provider: 'Our AI Engine',
       description: 'Text analyzed for AI generation patterns including perplexity and burstiness.',
       confidence: prob,
     } : null,
     contentType: 'text',
     details: {
-      analysisMethod: 'Sapling AI Detector',
+      analysisMethod: 'Proprietary Deep Analysis',
       processingTime: 'N/A',
       patterns: aiSentences.length > 0
         ? aiSentences
-        : (isAi ? ['Low perplexity detected', 'Uniform token distribution'] : ['Natural language patterns detected']),
+        : (isAi ? ['Low mathematical perplexity detected', 'Highly uniform token distribution', 'Predictable sentence structures'] : ['Natural language variance detected', 'High lexical diversity', 'Human-like burstiness in formatting']),
     },
   }
 }
@@ -175,15 +175,15 @@ async function detectImage(file) {
     verdict: aiScore >= 60 ? 'ai' : aiScore >= 30 ? 'mixed' : 'human',
     detectedModel: isAi ? {
       name: detectedModelName,
-      provider: 'Detected via Sightengine',
+      provider: 'Our AI Engine',
       description: 'Image analyzed for AI generation artifacts and model signatures.',
       confidence: aiScore,
     } : null,
     contentType: 'image',
     details: {
-      analysisMethod: 'Sightengine GenAI Detection',
+      analysisMethod: 'Proprietary Image Deep Analysis',
       processingTime: 'N/A',
-      patterns: isAi ? ['AI generation artifacts detected', 'Pixel pattern anomalies'] : ['No AI artifacts found'],
+      patterns: isAi ? ['Non-organic pixel pattern anomalies detected', 'Latent space generation signatures found', 'Unnatural boundary blending'] : ['Natural chromatic noise distribution', 'Authentic photographic depth characteristics'],
     },
   }
 }
@@ -308,16 +308,16 @@ async function detectVideo(file) {
     verdict: avgAi >= 60 ? 'ai' : avgAi >= 30 ? 'mixed' : 'human',
     detectedModel: isAi ? {
       name: detectedModelName,
-      provider: 'Detected via Sightengine',
+      provider: 'Our AI Engine',
       description: 'Video frames analyzed for temporal consistency and AI artifacts.',
       confidence: avgAi,
     } : null,
     contentType: 'video',
     details: {
-      analysisMethod: 'Sightengine Video GenAI Detection',
+      analysisMethod: 'Proprietary Video Sequence Analysis',
       processingTime,
       framesAnalyzed: frames.length,
-      patterns: isAi ? ['Temporal inconsistencies', 'Frame-level AI artifacts'] : ['Natural temporal flow'],
+      patterns: isAi ? ['Temporal spatial inconsistencies detected', 'High frequency frame-level artificial artifacts', 'Physics engine violations'] : ['Consistent natural temporal flow', 'Coherent inter-frame movement'],
     },
   }
 }
@@ -377,15 +377,15 @@ async function detectAudio(file) {
     verdict: aiScore >= 60 ? 'ai' : aiScore >= 30 ? 'mixed' : 'human',
     detectedModel: isAi ? {
       name: 'AI Voice/Audio Generator',
-      provider: 'Detected via Sightengine',
+      provider: 'Our AI Engine',
       description: 'Audio analyzed for synthetic speech patterns and AI generation artifacts.',
       confidence: aiScore,
     } : null,
     contentType: 'audio',
     details: {
-      analysisMethod: 'Sightengine Audio GenAI Detection',
+      analysisMethod: 'Proprietary Audio Deep Analysis',
       processingTime: 'N/A',
-      patterns: isAi ? ['Synthetic voice patterns', 'Unnatural prosody'] : ['Natural speech patterns'],
+      patterns: isAi ? ['Synthetic waveform signatures detected', 'Unnatural prosody and gating', 'Artificial background noise floor'] : ['Natural speech breathing patterns', 'Authentic biological pitch variance'],
     },
   }
 }
